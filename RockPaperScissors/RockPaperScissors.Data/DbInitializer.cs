@@ -1,8 +1,5 @@
 ﻿using RockPaperScissors.Model;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace RockPaperScissors.Data
 {
@@ -34,6 +31,15 @@ namespace RockPaperScissors.Data
                 new Rule { GameItemId = 3, BeatsId = 2, Reason = "Cuts" }
             };
             context.Rules.AddRange(rules);
+
+
+            var playerTypes = new PlayerType[]
+            {
+                new PlayerType { Name = "Human" },
+                new PlayerType { Name = "Random" },
+                new PlayerType { Name = "Tactical" }
+            };
+            context.PlayerTypes.AddRange(playerTypes);
             context.SaveChanges();
         }
     }

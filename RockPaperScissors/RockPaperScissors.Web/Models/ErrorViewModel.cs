@@ -1,5 +1,3 @@
-using System;
-
 namespace RockPaperScissors.Web.Models
 {
     public class ErrorViewModel

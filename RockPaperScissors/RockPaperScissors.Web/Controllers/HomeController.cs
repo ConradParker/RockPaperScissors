@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RockPaperScissors.Data;
+using Microsoft.Extensions.Configuration;
+using RockPaperScissors.Data.Repositories;
 using RockPaperScissors.Web.Models;
 
 namespace RockPaperScissors.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly RockPaperScissorsContext _context;
+        private readonly IRepository _gameRepo;
+        private IConfiguration _configuration;
 
-        public HomeController(RockPaperScissorsContext context)
+        public HomeController(IRepository gameRepo, IConfiguration configuration)
         {
-            _context = context;
+            _gameRepo = gameRepo;
+            _configuration = configuration;
         }
         
         public async Task<IActionResult> Index()
         {
-            var gameItems = await _context.GameItems.ToListAsync();
-            return View(gameItems);
+            return View();
         }
 
-        // GET: GameItems/Select/5
         public async Task<IActionResult> Play(int? id)
         {
             if (id == null)
@@ -33,18 +31,24 @@ namespace RockPaperScissors.Web.Controllers
                 return NotFound();
             }
 
-            var gameItem = await _context.GameItems.SingleOrDefaultAsync(m => m.Id == id);
-            if (gameItem == null)
-            {
-                return NotFound();
-            }
-            return View(gameItem);
+            var gamePlayCount = int.Parse(_configuration["AppSettings:GamePlays"]);
+            var humanPlayerType = _gameRepo.GetPlayerType(1);
+            var computerPlayerType = _gameRepo.GetPlayerType(id.Value);
+            var game = _gameRepo.AddGame(gamePlayCount, humanPlayerType, computerPlayerType);
+
+            return View(game);
+        }
+
+        public async Task<IActionResult> Start()
+        {
+            var computerPlayers = _gameRepo.GetPlayerTypes().Where(p => p.Name != "Human");
+            return View(computerPlayers);
         }
 
 
-        public IActionResult About()
+        public IActionResult Todo()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "Todo List.";
 
             return View();
         }
@@ -60,5 +64,7 @@ namespace RockPaperScissors.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }

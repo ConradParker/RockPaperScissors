@@ -1,23 +1,63 @@
-﻿@model RockPaperScissors.Model.GameItem
+﻿@model RockPaperScissors.Dto.GameDto
 
 @{
     ViewData["Title"] = "Play Game";
 }
 
-<h2>Game Played</h2>
+<h2>Game Started</h2>
 
 <div>
     <h4>You Chose</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            Game Id: @Html.DisplayFor(model => model.Id)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.PlayerTwoType)
         </dd>
     </dl>
 </div>
+
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Play Number
+                </th>
+                <th>
+                    Your Choice
+                </th>
+                <th>
+                    Computer Choice
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var play in Model.Plays)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => play.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => play.PlayerOneChoice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => play.PlayerTwoChoice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => play.Result)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <div>
-    <a asp-action="Index">Play Again</a>
+    <a asp-action="Play">Play</a>
 </div>
