@@ -16,15 +16,15 @@ namespace RockPaperScissors.Data
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Game, GameDto>()
-                .ForMember(dto => dto.PlayerOneType, opt => opt.MapFrom(g => g.PlayerOneType.Name))
-                .ForMember(dto => dto.PlayerTwoType, opt => opt.MapFrom(g => g.PlayerTwoType.Name));
+                cfg.CreateMap<Match, MatchDto>()
+                .ForMember(dto => dto.PlayerOneId, opt => opt.MapFrom(g => g.PlayerOne.Id))
+                .ForMember(dto => dto.PlayerTwoId, opt => opt.MapFrom(g => g.PlayerTwo.Id));
 
-                cfg.CreateMap<GamePlay, GamePlayDto>()
+                cfg.CreateMap<Game, GameDto>()
                 .ForMember(dto => dto.PlayerOneChoice, opt => opt.MapFrom(gp => gp.PlayerOneChoice.Name))
                 .ForMember(dto => dto.PlayerTwoChoice, opt => opt.MapFrom(gp => gp.PlayerTwoChoice.Name))
-                .ForMember(dto => dto.PlayerTwoChoice, opt => opt.UseValue("TODO: Calculate"));
+                .ForMember(dto => dto.Result, opt => opt.UseValue("TODO: Calculate"));
             });
         }
-     }
+    }
 }

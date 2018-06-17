@@ -1,19 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace RockPaperScissors.Model
 {
-    public class TacticalComputer : ComputerDecorator
-    {
-        public TacticalComputer(Computer computer) : base(computer)
-        {
-        }
-
-        public override GameItem ChooseItem()
-        {
-            // TODO: Return tactical item
-            return new GameItem();
-        }
-    }
+    public class TacticalComputer : Computer { }
 }

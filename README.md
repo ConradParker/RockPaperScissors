@@ -16,9 +16,6 @@ the data access layer
 
 ### RockPaperScissors.Web
 The UI bit
-
-## Work Log
-Initial Project Setup (3 hours)
  
 
  

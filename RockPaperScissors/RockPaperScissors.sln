@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Model", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Data", "RockPaperScissors.Data\RockPaperScissors.Data.csproj", "{58A16054-377A-47D2-A973-C176397DC222}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Service", "RockPaperScissors.Service\RockPaperScissors.Service.csproj", "{1E42B9B2-3E8E-4825-B7FB-D0AECB610382}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Dto", "RockPaperScissors.Dto\RockPaperScissors.Dto.csproj", "{A204838D-1015-4951-A0E8-55B399829CEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Dto", "RockPaperScissors.Dto\RockPaperScissors.Dto.csproj", "{A204838D-1015-4951-A0E8-55B399829CEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Logic", "RockPaperScissors.Logic\RockPaperScissors.Logic.csproj", "{DFC35910-1580-4F00-ABBE-557D8C65BDEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +31,14 @@ Global
 		{58A16054-377A-47D2-A973-C176397DC222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58A16054-377A-47D2-A973-C176397DC222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58A16054-377A-47D2-A973-C176397DC222}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E42B9B2-3E8E-4825-B7FB-D0AECB610382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E42B9B2-3E8E-4825-B7FB-D0AECB610382}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E42B9B2-3E8E-4825-B7FB-D0AECB610382}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E42B9B2-3E8E-4825-B7FB-D0AECB610382}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A204838D-1015-4951-A0E8-55B399829CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A204838D-1015-4951-A0E8-55B399829CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A204838D-1015-4951-A0E8-55B399829CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A204838D-1015-4951-A0E8-55B399829CEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFC35910-1580-4F00-ABBE-557D8C65BDEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFC35910-1580-4F00-ABBE-557D8C65BDEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFC35910-1580-4F00-ABBE-557D8C65BDEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFC35910-1580-4F00-ABBE-557D8C65BDEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

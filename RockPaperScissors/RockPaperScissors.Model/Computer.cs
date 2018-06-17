@@ -1,7 +1,7 @@
-﻿namespace RockPaperScissors.Model
+﻿using System;
+using System.Collections.Generic;
+
+namespace RockPaperScissors.Model
 {
-    public abstract class Computer : Player
-    {
-        public abstract GameItem ChooseItem();
-    }
+    public class Computer : Player { }
 }

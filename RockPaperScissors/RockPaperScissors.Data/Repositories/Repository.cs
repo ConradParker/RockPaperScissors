@@ -4,58 +4,77 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using RockPaperScissors.Dto;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace RockPaperScissors.Data.Repositories
 {
     public class Repository : IRepository
     {
-        private RockPaperScissorsContext _dbContext;
+        #region Private Variables
+
+        protected RockPaperScissorsContext _dbContext;
+
+        #endregion Private Variables
+
+        #region Constructor(s)
 
         public Repository(RockPaperScissorsContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public GameDto AddGame(int gamePlayCount, PlayerType playerOneType, PlayerType playerTwoType)
+        #endregion Constructor(s)
+
+        #region Public Methods
+
+        /// <summary>
+        /// Get all entities
+        /// </summary>
+        /// <returns>IQueryable<T></returns>
+        public IQueryable<T> GetAll<T>() where T : class
         {
-            var game = new Game
-            {
-                GameDate = DateTime.Now,
-                GamePlayCount = gamePlayCount,
-                PlayerOneType = playerOneType,
-                PlayerTwoType = playerTwoType
-            };
-            _dbContext.Games.Add(game);
+            return _dbContext.Set<T>().AsNoTracking();
+        }
+
+        /// <summary>
+        /// Fidn an entity by its primary key
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public T GetById<T>(int id) where T : class
+        {
+            return _dbContext.Set<T>().Find(id);
+        }
+
+        public T Create<T>(T entity) where T : class
+        {
+            _dbContext.Set<T>().Add(entity);
             _dbContext.SaveChanges();
-
-            return GetGame(game.Id);
-        }
-
-        public GameDto GetGame(int id)
-        {
-            return _dbContext.Set<Game>()
-                .Where(g => g.Id == id)                
-                .ProjectTo<GameDto>()
-                .SingleOrDefault();
+            return entity;
         }
 
         /// <summary>
-        /// Get a list of the player types
+        /// Update an entity
         /// </summary>
-        /// <returns>List of PlayerType</returns>
-        public IEnumerable<PlayerType> GetPlayerTypes()
+        /// <param name="entity"></param>
+        public void Update<T>(T entity) where T : class
         {
-            return _dbContext.Set<PlayerType>();
+            _dbContext.Set<T>().Update(entity);
+            _dbContext.SaveChanges();
         }
 
         /// <summary>
-        /// Get a PlayerType by Id
+        /// Delete an entity
         /// </summary>
-        /// <param name="id">PlayerType id</param>
-        /// <returns>PlayerType</returns>
-        public PlayerType GetPlayerType(int id)
+        /// <param name="id"></param>
+        public void Delete<T>(int id) where T : class
         {
-            return _dbContext.Set<PlayerType>().SingleOrDefault(g => g.Id == id);
+            var entity = GetById<T>(id);
+            _dbContext.Set<T>().Remove(entity);
+            _dbContext.SaveChanges();
         }
+
+        #endregion Public Methods
     }
 }

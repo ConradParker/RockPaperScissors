@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RockPaperScissors.Data\RockPaperScissors.Data.csproj" />
-    <ProjectReference Include="..\RockPaperScissors.Service\RockPaperScissors.Service.csproj" />
+    <ProjectReference Include="..\RockPaperScissors.Logic\RockPaperScissors.Logic.csproj" />
   </ItemGroup>
 
 </Project>

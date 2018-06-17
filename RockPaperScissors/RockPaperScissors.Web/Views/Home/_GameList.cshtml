@@ -1,0 +1,38 @@
+﻿@model IEnumerable<RockPaperScissors.Dto.GameDto>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Play Number
+            </th>
+            <th>
+                Your Choice
+            </th>
+            <th>
+                Computer Choice
+            </th>
+            <th>
+                Result
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => game.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => game.PlayerOneChoice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => game.PlayerTwoChoice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => game.Result)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

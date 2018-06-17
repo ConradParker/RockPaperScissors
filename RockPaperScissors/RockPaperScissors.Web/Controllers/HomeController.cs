@@ -1,62 +1,91 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using RockPaperScissors.Data.Repositories;
+using RockPaperScissors.Logic;
+using RockPaperScissors.Logic.Enums;
+using RockPaperScissors.Model;
 using RockPaperScissors.Web.Models;
+using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace RockPaperScissors.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IRepository _gameRepo;
+        #region Private Variables
+
+        private readonly IGameLogic _gameLogic;
         private IConfiguration _configuration;
 
-        public HomeController(IRepository gameRepo, IConfiguration configuration)
+        #endregion Private Variables
+
+        #region Constructor(s)
+
+        public HomeController(IGameLogic gameLogic, IConfiguration configuration)
         {
-            _gameRepo = gameRepo;
+            _gameLogic = gameLogic;
             _configuration = configuration;
         }
-        
-        public async Task<IActionResult> Index()
+
+        #endregion Constructor(s)
+
+        #region Public Methods
+
+        public IActionResult Index()
         {
             return View();
         }
 
-        public async Task<IActionResult> Play(int? id)
+        public IActionResult Match(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var gamePlayCount = int.Parse(_configuration["AppSettings:GamePlays"]);
-            var humanPlayerType = _gameRepo.GetPlayerType(1);
-            var computerPlayerType = _gameRepo.GetPlayerType(id.Value);
-            var game = _gameRepo.AddGame(gamePlayCount, humanPlayerType, computerPlayerType);
+            // Figure out players
+            Player computerPlayer = null;
+            var humanPlayer = _gameLogic.CreatePlayer(new Human());
+            
+            if (id.Value == 1)
+            {
+                computerPlayer = _gameLogic.CreatePlayer(new Computer());
+            }
+            else if (id.Value == 2)
+            {
+                computerPlayer = _gameLogic.CreatePlayer(new TacticalComputer());
+            }
 
-            return View(game);
+            var gameCount = int.Parse(_configuration["AppSettings:GamePlays"]);
+            var match = _gameLogic.StartMatch(gameCount, humanPlayer, computerPlayer);
+            
+            return View(match);
         }
 
-        public async Task<IActionResult> Start()
+        [HttpPost]
+        public IActionResult Play(int matchId, int playerOneItemId)
         {
-            var computerPlayers = _gameRepo.GetPlayerTypes().Where(p => p.Name != "Human");
+            var match = _gameLogic.PlayGame(matchId, 1, _gameLogic.GetComputerChoice(matchId).Id);
+            return PartialView("_GameList", match.Games);
+        }
+
+        public IActionResult PlayerSelect()
+        {
+            var computerPlayers = Enum.GetValues(typeof(PlayerType))
+                .Cast<PlayerType>()
+                .Where(p => p != PlayerType.Human)
+                .ToList();
             return View(computerPlayers);
         }
 
 
         public IActionResult Todo()
         {
-            ViewData["Message"] = "Todo List.";
-
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult Worklog()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
@@ -65,6 +94,6 @@ namespace RockPaperScissors.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
+        #endregion Public Methods
     }
 }

@@ -1,0 +1,36 @@
+﻿@model RockPaperScissors.Dto.MatchDto
+
+@{
+    ViewData["Title"] = "Play Game";
+}
+
+<h2>Game Started</h2>
+
+<div>
+    <h4>You Chose</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Match Id: @Html.DisplayFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PlayerTwoId)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <form asp-controller="Home" asp-action="Play"
+          data-ajax-mode="replace"
+          data-ajax-begin="onBegin" data-ajax-complete="onComplete"
+          data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+          data-ajax="true" data-ajax-method="POST">
+        <input type="hidden" name="matchId" value="@Model.Id" />
+        <input type="submit" name="submit" value="Play" class="btn btn-primary" />
+    </form>
+</div>
+
+<div class="row">
+    <div id="Results"></div>
+    @await Html.PartialAsync("_GameList", Model.Games)
+</div>

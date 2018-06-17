@@ -1,0 +1,31 @@
+﻿@model IEnumerable<RockPaperScissors.Logic.Enums.PlayerType>
+@{
+    ViewData["Title"] = "Rock, Paper, Scissors";
+}
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Select Your Opponent.
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 1;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item) Computer
+                    </td>
+                    <td>
+                        <a asp-action="Match" asp-route-id="@i">Select</a>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>
