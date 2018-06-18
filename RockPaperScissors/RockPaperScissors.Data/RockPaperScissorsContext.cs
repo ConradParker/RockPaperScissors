@@ -17,6 +17,7 @@ namespace RockPaperScissors.Data
         public DbSet<Computer> Computers { get; set; }
         public DbSet<Human> Humans { get; set; }
         public DbSet<TacticalComputer> TacticalComputers { get; set; }
+        public DbSet<Result> Results { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

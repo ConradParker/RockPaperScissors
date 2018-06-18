@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using RockPaperScissors.Data.Enums;
 using RockPaperScissors.Logic;
-using RockPaperScissors.Logic.Enums;
 using RockPaperScissors.Model;
 using RockPaperScissors.Web.Models;
 using System;
@@ -38,35 +38,33 @@ namespace RockPaperScissors.Web.Controllers
 
         public IActionResult Match(int? id)
         {
+            // Validate parameter
             if (id == null)
             {
                 return NotFound();
             }
 
-            // Figure out players
-            Player computerPlayer = null;
+            // Create new players
             var humanPlayer = _gameLogic.CreatePlayer(new Human());
-            
-            if (id.Value == 1)
-            {
-                computerPlayer = _gameLogic.CreatePlayer(new Computer());
-            }
-            else if (id.Value == 2)
-            {
-                computerPlayer = _gameLogic.CreatePlayer(new TacticalComputer());
-            }
+            var computerPlayer = CreateComputerPlayer(id.Value);
 
+            // Create new game
             var gameCount = int.Parse(_configuration["AppSettings:GamePlays"]);
             var match = _gameLogic.StartMatch(gameCount, humanPlayer, computerPlayer);
-            
+
             return View(match);
         }
-
-        [HttpPost]
+        
         public IActionResult Play(int matchId, int playerOneItemId)
         {
-            var match = _gameLogic.PlayGame(matchId, 1, _gameLogic.GetComputerChoice(matchId).Id);
-            return PartialView("_GameList", match.Games);
+            // Figure out computer's choice
+            var match = _gameLogic.GetMatch(matchId);
+            var computer = _gameLogic.GetById<Computer>(match.PlayerTwoId);
+            var computerChoiceId = _gameLogic.GetComputerChoice(computer).Id;
+
+            // Play game and return results
+            match = _gameLogic.PlayGame(matchId, playerOneItemId, computerChoiceId);
+            return PartialView("_MatchPlay", match);
         }
 
         public IActionResult PlayerSelect()
@@ -95,5 +93,28 @@ namespace RockPaperScissors.Web.Controllers
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private Player CreateComputerPlayer(int playerTypeId)
+        {
+            Player computerPlayer = null;
+            var playerType = (PlayerType)playerTypeId;
+            switch (playerType)
+            {
+                case PlayerType.Random:
+                    computerPlayer = _gameLogic.CreatePlayer(new Computer());
+                    break;
+                case PlayerType.Tactical:
+                    computerPlayer = _gameLogic.CreatePlayer(new TacticalComputer());
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            return computerPlayer;
+        }
+
+        #endregion Private Methods
     }
 }

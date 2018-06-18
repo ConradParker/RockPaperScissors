@@ -1,10 +1,10 @@
 ﻿using AutoMapper.QueryableExtensions;
+using RockPaperScissors.Data.Enums;
 using RockPaperScissors.Dto;
 using RockPaperScissors.Model;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace RockPaperScissors.Data.Repositories
 {
@@ -26,10 +26,12 @@ namespace RockPaperScissors.Data.Repositories
                 .SingleOrDefault();
         }
 
-        public void AddGame(int matchId, GameItem playerOneChoice, GameItem playerTwoChoice)
+        public void AddGame(int matchId, GameItem playerOneChoice, GameItem playerTwoChoice, Result result)
         {
             // Find the match by Id
             var match = _dbContext.Set<Match>()
+                .Include(m => m.Games)
+                .ThenInclude(game => game.Result)
                 .SingleOrDefault(g => g.Id == matchId);
 
             // Check we have not exceeded the allowed number of plays per game
@@ -44,8 +46,15 @@ namespace RockPaperScissors.Data.Repositories
                 Match = match,
                 GameDate = DateTime.Now,
                 PlayerOneChoice = playerOneChoice,
-                PlayerTwoChoice = playerTwoChoice
+                PlayerTwoChoice = playerTwoChoice,
+                Result = result
             });
+            
+            // Check if match is over
+            if (match.Games.Count >= match.GameCount)
+            {
+                match.Result = CalculateMatchResult(match); 
+            }
             _dbContext.SaveChanges();
         }
 
@@ -66,5 +75,33 @@ namespace RockPaperScissors.Data.Repositories
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+        
+        /// <summary>
+        /// Calculate the match result
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        private Result CalculateMatchResult(Match match)
+        {
+            var resultType = ResultType.Draw;
+
+            var playerOneWinCount = match.Games.Count(game => game.Result.Id == (int)ResultType.Player1Win);
+            var playerTwoWinCount = match.Games.Count(game => game.Result.Id == (int)ResultType.Player2Win);
+            
+            if (playerOneWinCount > playerTwoWinCount)
+            {
+                resultType = ResultType.Player1Win;
+            }
+            else if (playerTwoWinCount > playerOneWinCount)
+            {
+                resultType = ResultType.Player2Win;
+            }
+
+            return GetById<Result>((int)resultType);
+        }
+
+        #endregion Private Methods
     }
 }

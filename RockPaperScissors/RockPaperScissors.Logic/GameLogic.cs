@@ -1,4 +1,5 @@
-﻿using RockPaperScissors.Data.Repositories;
+﻿using RockPaperScissors.Data.Enums;
+using RockPaperScissors.Data.Repositories;
 using RockPaperScissors.Dto;
 using RockPaperScissors.Model;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace RockPaperScissors.Logic
 {
-    public class GameLogic : IGameLogic
+    public class GameLogic : Logic, IGameLogic
     {
         #region Private Variables
 
@@ -17,7 +18,7 @@ namespace RockPaperScissors.Logic
 
         #region Constructor(s)
 
-        public GameLogic(IGameRepository gameRepository)
+        public GameLogic(IGameRepository gameRepository) : base(gameRepository)
         {
             _gameRepository = gameRepository;
         }
@@ -67,11 +68,25 @@ namespace RockPaperScissors.Logic
         /// <returns>The updated Game Dto</returns>
         public MatchDto PlayGame(int matchId, int playerOneChoiceId, int playerTwoChoiceId)
         {
+            // Get current game info 
+            var rules = _gameRepository.GetAll<Rule>().ToList();
             var playerOneChoice = _gameRepository.GetById<GameItem>(playerOneChoiceId);
             var playerTwoChoice = _gameRepository.GetById<GameItem>(playerTwoChoiceId);
+            var match = _gameRepository.GetMatch(matchId);
 
-            _gameRepository.AddGame(matchId, playerOneChoice, playerTwoChoice);
+            // Check we have not exceeded the allowed number of plays per game
+            if (match.Games.Count >= match.GameCount)
+            {
+                throw new NotSupportedException("Game play count exceeded");
+            }
+
+            // Calculate the game result
+            var result = _gameRepository.GetById<Result>((int)CalculateGameResult(rules, playerOneChoice, playerTwoChoice));
+            _gameRepository.AddGame(matchId, playerOneChoice, playerTwoChoice, result);
+
+            // Get the updated match info
             return GetMatch(matchId);
+
         }
         
         public Player CreatePlayer(Player player)
@@ -80,24 +95,22 @@ namespace RockPaperScissors.Logic
             return _gameRepository.Create(player);
         }
 
-        public GameItem GetComputerChoice(int matchId)
+        public GameItem GetComputerChoice(Computer computer)
         {
-            // Get match data from repo
-            var match = _gameRepository.GetMatch(matchId);
-            var playerTwo = _gameRepository.GetById<Player>(match.PlayerTwoId);
-            
-            // Validate we have a computer
-            if (!(playerTwo is Computer))
+            GameItem computerChoice = null;
+
+            switch (computer.GetType().Name)
             {
-                throw new NotSupportedException();
+                case nameof(Computer):
+                    computerChoice = ChooseRandomItem();
+                    break;
+                case nameof(TacticalComputer):
+                    return ChooseTacticalItem(computer);
+                default:
+                    throw new NotSupportedException();
             }
 
-            if(playerTwo.GetType() == typeof(TacticalComputer))
-            {
-                return ChooseTacticalItem(playerTwo);
-            }
-
-            return ChooseRandomItem();
+            return computerChoice;
         }
 
         #endregion Public Methods
@@ -134,6 +147,31 @@ namespace RockPaperScissors.Logic
             }
 
             return ChooseRandomItem();
+        }
+        
+        private static ResultType CalculateGameResult(IEnumerable<Rule> rules, GameItem playerOneChoice, GameItem playerTwoChoice)
+        {
+            var gameResult = ResultType.Draw;
+
+            // Check for a draw
+            if (playerOneChoice == playerTwoChoice)
+            {
+                return gameResult;
+            }
+
+            // Check if player one beat player two
+            var playerOneBeatsThese = rules.Where(r => r.GameItemId == playerOneChoice.Id).Select(r => r.BeatsId);
+            if (playerOneBeatsThese.Any(r => r == playerTwoChoice.Id))
+            {
+                gameResult = ResultType.Player1Win;
+            }
+            var playerTwoBeatsThese = rules.Where(r => r.GameItemId == playerTwoChoice.Id).Select(r => r.BeatsId);
+            if (playerTwoBeatsThese.Any(r => r == playerOneChoice.Id))
+            {
+                gameResult = ResultType.Player2Win;
+            }
+
+            return gameResult;
         }
 
         #endregion Private Methods

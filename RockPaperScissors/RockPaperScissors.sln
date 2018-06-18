@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Data", "R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Dto", "RockPaperScissors.Dto\RockPaperScissors.Dto.csproj", "{A204838D-1015-4951-A0E8-55B399829CEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Logic", "RockPaperScissors.Logic\RockPaperScissors.Logic.csproj", "{DFC35910-1580-4F00-ABBE-557D8C65BDEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RockPaperScissors.Logic", "RockPaperScissors.Logic\RockPaperScissors.Logic.csproj", "{DFC35910-1580-4F00-ABBE-557D8C65BDEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

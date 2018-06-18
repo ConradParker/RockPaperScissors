@@ -7,7 +7,7 @@
 <h2>Game Started</h2>
 
 <div>
-    <h4>You Chose</h4>
+    <h4>@Model.PlayerOneType vs @Model.PlayerTwoType</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -18,19 +18,27 @@
         </dd>
     </dl>
 </div>
-
-<div>
-    <form asp-controller="Home" asp-action="Play"
-          data-ajax-mode="replace"
-          data-ajax-begin="onBegin" data-ajax-complete="onComplete"
-          data-ajax-failure="onFailed" data-ajax-success="onSuccess"
-          data-ajax="true" data-ajax-method="POST">
-        <input type="hidden" name="matchId" value="@Model.Id" />
-        <input type="submit" name="submit" value="Play" class="btn btn-primary" />
-    </form>
-</div>
-
 <div class="row">
-    <div id="Results"></div>
-    @await Html.PartialAsync("_GameList", Model.Games)
+    <button id="play-button" role="button" class="btn btn-primary">Play Game</button>
+    <div id="match-play"></div>
 </div>
+
+@section Scripts{
+    <script>
+
+        $('#play-button').click(function () {
+            $.ajax({
+                url: '@Url.Action("Play", "Home")?matchId=' + @Model.Id + '&playerOneItemId=1',
+                type: "GET",
+                dataType: "html",
+                //data: { id: 1 },//this is as per your requirement
+                success: function (data) {
+                    $('#match-play').html(data);
+                    //if (data.Result.length > 0) {
+                    //    $('#play-button').hide();
+                    //}
+                },
+            });
+        });
+    </script>
+}

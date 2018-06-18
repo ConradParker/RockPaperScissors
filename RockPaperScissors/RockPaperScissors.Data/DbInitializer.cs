@@ -15,7 +15,7 @@ namespace RockPaperScissors.Data
                 return;   // DB has been seeded
             }
 
-            // TODO: Add explicit Ids
+            // Add game items
             var gameItems = new GameItem[]
             {
                 new GameItem { Name = "Rock" },
@@ -24,6 +24,7 @@ namespace RockPaperScissors.Data
             };
             context.GameItems.AddRange(gameItems);
 
+            // Add rules
             var rules = new Rule[]
             {
                 new Rule { GameItemId = 1, BeatsId = 3, Reason = "Crushes" },
@@ -31,6 +32,16 @@ namespace RockPaperScissors.Data
                 new Rule { GameItemId = 3, BeatsId = 2, Reason = "Cuts" }
             };
             context.Rules.AddRange(rules);
+            
+            // Add result variations
+            var results = new Result[]
+            {
+                new Result { Text = "Player 1 Win" },
+                new Result { Text = "Player 2 Win" },
+                new Result { Text = "Draw" }
+            };
+            context.Results.AddRange(results);
+
             context.SaveChanges();
         }
     }
