@@ -10,7 +10,7 @@
                 @{int i = 1;}
                 @foreach (var player in Model.PlayerTypes)
                 {
-                    <a href="javascript:selectPlayer(@i)">
+                    <a class="highlight" href="javascript:selectPlayer(@i)">
                         <img src="https://robohash.org/@player@@.png"/><span>@player Computer</span>
                     </a>
                     i++;

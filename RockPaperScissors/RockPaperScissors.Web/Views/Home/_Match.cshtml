@@ -19,7 +19,7 @@
             <h3>Select your choice</h3>
             @foreach (var item in Model.GameItems)
             {
-                <a class="game-item" href="javascript: gameItemClick(@item.Id, @Model.MatchData.Id)"><i class="fas fa-@item.Icon fa-5x play" style="color: #ffcc33; vertical-align: middle;"></i>&nbsp;@item.Name</a>
+                <a class="game-item highlight" href="javascript: gameItemClick(@item.Id, @Model.MatchData.Id)"><i class="fas fa-@item.Icon fa-5x play game-item-image" style="color: #ffcc33; vertical-align: middle;"></i>&nbsp;@item.Name</a>
             }
         }
         @if (Model.MatchData.Games.Any())
