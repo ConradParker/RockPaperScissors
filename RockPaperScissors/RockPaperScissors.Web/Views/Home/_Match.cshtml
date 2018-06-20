@@ -6,7 +6,7 @@
         <h2>Match Started</h2>
 
         <div>
-            <p>@Model.MatchData.PlayerOneType vs @Model.MatchData.PlayerTwoType Best of @Model.MatchData.GameCount</p>
+            <p>@Model.MatchData.PlayerOneType vs @Model.MatchData.PlayerTwoType - Best of @Model.MatchData.GameCount</p>
             <hr />
         </div>
         @if (Model.MatchData.Result != null)
@@ -16,11 +16,19 @@
         }
         else
         {
-            <h3>Select your choice</h3>
-            @foreach (var item in Model.GameItems)
-            {
-                <a class="game-item highlight" href="javascript: gameItemClick(@item.Id, @Model.MatchData.Id)"><i class="fas fa-@item.Icon fa-5x play game-item-image" style="color: #ffcc33; vertical-align: middle;"></i>&nbsp;@item.Name</a>
-            }
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="section-subheading">Select your weapon...</h3>
+                    <div class="row text-center">
+                        @foreach (var item in Model.GameItems)
+                        {
+                        <div class="col-xs-4">
+                            <button class="btn btn-primary" onclick="gameItemClick(@item.Id, @Model.MatchData.Id)"><i class="fas fa-@item.Icon fa-5x" style="vertical-align:middle;"></i>&nbsp;@item.Name</button>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
         }
         @if (Model.MatchData.Games.Any())
         {

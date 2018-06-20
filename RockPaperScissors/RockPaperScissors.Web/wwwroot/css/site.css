@@ -841,26 +841,6 @@ dd {
     margin-left: 10px;
 }
 
-.game-item-image {
-    margin: 2em;
-    border: 2px solid grey;
-    box-shadow: 0 0 10px #333;
-    -webkit-box-shadow: 0 0 10px #333;
-    -moz-box-shadow: 0 0 10px #333;
-    -o-box-shadow: 0 0 10px #333;
-    -ms-box-shadow: 0 0 10px #333;
-    margin: 0 5px 0 20px;
-}
-    .game-item-image:hover {
-        margin: 2em;
-        border: 2px solid red;
-        box-shadow: 0 0 10px #333;
-        -webkit-box-shadow: 0 0 10px #333;
-        -moz-box-shadow: 0 0 10px #333;
-        -o-box-shadow: 0 0 10px #333;
-        -ms-box-shadow: 0 0 10px #333;
-        margin: 0 5px 0 20px;
-    }
 /* Shake */
 .shake {
     animation: shake 0.5s;
@@ -912,7 +892,7 @@ dd {
     }
 }
 
-.highlight > img {
+.highlight > img{
     border: 2px solid grey;
     box-shadow: 0 0 10px #333;
     -webkit-box-shadow: 0 0 10px #333;
