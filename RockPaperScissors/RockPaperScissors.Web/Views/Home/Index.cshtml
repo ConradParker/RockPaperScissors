@@ -20,8 +20,7 @@
 
 @section Scripts {
     <script>
-        $('#play-button').click(function () {
-            var selectedId = $('#opponent').val();
+        function selectPlayer(selectedId) {
             $('#start-game').hide();
             $.ajax({
                 url: '@Url.Action("StartMatch", "Home")?computerTypeId=' + selectedId,
@@ -31,7 +30,7 @@
                     $('#match-play').html(data);
                 },
             });
-        });
+        };
 
         function gameItemClick(gameItemid, matchId) {
             $.ajax({

@@ -1,14 +1,20 @@
 ﻿@model RockPaperScissors.Dto.Query.IndexView
+@using System.Linq;
+
 <!-- Play Section -->
-<section id="play" class="bg-info">
+<section id="play" class="bg-primary">
     <div class="container">
         <div id="start-game" class="row">
             <div class="col-lg-12">
-                <h3>Select Your Opponent.</h3>
-                @Html.DropDownList("Opponent",
-                    Html.GetEnumSelectList<RockPaperScissors.Dto.Enums.PlayerType>().Where(p => p.Text != "Human"),
-                    "Select Opponent",new { @class = "form-control", @id = "opponent" })
-                <button id="play-button" role="button" class="btn btn-primary">Play Game</button>
+                <h3>Select Your Opponent...</h3>
+                @{int i = 1;}
+                @foreach (var player in Model.PlayerTypes)
+                {
+                    <a href="javascript:selectPlayer(@i)">
+                        <img src="https://robohash.org/@player@@.png"/><span>@player Computer</span>
+                    </a>
+                    i++;
+                }
             </div>
         </div>
 

@@ -6,7 +6,7 @@
         <h2>Match Started</h2>
 
         <div>
-            <h4>@Model.MatchData.PlayerOneType vs @Model.MatchData.PlayerTwoType</h4>
+            <p>@Model.MatchData.PlayerOneType vs @Model.MatchData.PlayerTwoType Best of @Model.MatchData.GameCount</p>
             <hr />
         </div>
         @if (Model.MatchData.Result != null)
@@ -16,48 +16,53 @@
         }
         else
         {
-            <h6>Make your selection</h6>
+            <h3>Select your choice</h3>
             @foreach (var item in Model.GameItems)
             {
                 <a class="game-item" href="javascript: gameItemClick(@item.Id, @Model.MatchData.Id)"><i class="fas fa-@item.Icon fa-5x play" style="color: #ffcc33; vertical-align: middle;"></i>&nbsp;@item.Name</a>
             }
         }
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Play Number
-                    </th>
-                    <th>
-                        Your Choice
-                    </th>
-                    <th>
-                        Computer Choice
-                    </th>
-                    <th>
-                        Result
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var game in Model.MatchData.Games)
-                {
+        @if (Model.MatchData.Games.Any())
+        {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => game.Id)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => game.PlayerOneChoice)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => game.PlayerTwoChoice)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => game.Result)
-                        </td>
+                        <th>
+                            Play Number
+                        </th>
+                        <th>
+                            Your Choice
+                        </th>
+                        <th>
+                            Computer Choice
+                        </th>
+                        <th>
+                            Result
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @{int i = 1;}
+                    @foreach (var game in Model.MatchData.Games)
+                    {
+                        <tr>
+                            <td>
+                                @i
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => game.PlayerOneChoice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => game.PlayerTwoChoice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => game.Result)
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>

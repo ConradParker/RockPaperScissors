@@ -120,12 +120,22 @@ namespace RockPaperScissors.Logic
             return GetMatchView(match.Id);
         }
         
+        /// <summary>
+        /// Create a new Player
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public Player CreatePlayer(Player player)
         {
             player.DateAdded = DateTime.Now;   
             return _gameRepository.Create(player);
         }
 
+        /// <summary>
+        /// Gets the choice of a computer player
+        /// </summary>
+        /// <param name="computer"></param>
+        /// <returns></returns>
         public GameItem GetComputerChoice(Player computer)
         {
             GameItem computerChoice = null;
