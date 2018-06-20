@@ -25,7 +25,7 @@ the business model
 the business logic
 
 ### RockPaperScissors.Logic.Test
-the business logic
+the business logic tests
 
 ### RockPaperScissors.Web
 The UI bit 
