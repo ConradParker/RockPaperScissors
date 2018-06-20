@@ -1,0 +1,17 @@
+﻿@model RockPaperScissors.Dto.Query.IndexView
+<!-- Play Section -->
+<section id="play" class="bg-info">
+    <div class="container">
+        <div id="start-game" class="row">
+            <div class="col-lg-12">
+                <h3>Select Your Opponent.</h3>
+                @Html.DropDownList("Opponent",
+                    Html.GetEnumSelectList<RockPaperScissors.Dto.Enums.PlayerType>().Where(p => p.Text != "Human"),
+                    "Select Opponent",new { @class = "form-control", @id = "opponent" })
+                <button id="play-button" role="button" class="btn btn-primary">Play Game</button>
+            </div>
+        </div>
+
+        <div id="match-play"></div>
+    </div>
+</section>

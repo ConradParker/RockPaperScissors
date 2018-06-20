@@ -18,9 +18,9 @@ namespace RockPaperScissors.Data
             // Add game items
             var gameItems = new GameItem[]
             {
-                new GameItem { Name = "Rock" },
-                new GameItem { Name = "Paper" },
-                new GameItem { Name = "Scissors" }
+                new GameItem { Name = "Rock", Icon = "hand-rock" },
+                new GameItem { Name = "Paper", Icon = "hand-paper" },
+                new GameItem { Name = "Scissors", Icon = "hand-scissors" }
             };
             context.GameItems.AddRange(gameItems);
 

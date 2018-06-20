@@ -8,11 +8,11 @@ namespace RockPaperScissors.Model
         public int Id { get; set; }
         public DateTime MatchDate { get; set; }
         public int GameCount { get; set; }
-        public virtual Player PlayerOne { get; set; }
-        public virtual Player PlayerTwo { get; set; }
-        public virtual Result Result { get; set; }
+        public Player PlayerOne { get; set; }
+        public Player PlayerTwo { get; set; }
+        public Result Result { get; set; }
 
-        public ICollection<Game> Games { get; set; }
+        public List<Game> Games { get; set; }
 
         public Match()
         {

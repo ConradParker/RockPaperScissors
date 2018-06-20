@@ -1,0 +1,63 @@
+﻿@model RockPaperScissors.Dto.Query.MatchView
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <h2>Match Started</h2>
+
+        <div>
+            <h4>@Model.MatchData.PlayerOneType vs @Model.MatchData.PlayerTwoType</h4>
+            <hr />
+        </div>
+        @if (Model.MatchData.Result != null)
+        {
+            <h1>@Model.MatchData.Result</h1>
+            <button id="reset-button" class="btn btn-primary" role="button" onclick="resetClick()">Play Again</button>
+        }
+        else
+        {
+            <h6>Make your selection</h6>
+            @foreach (var item in Model.GameItems)
+            {
+                <a class="game-item" href="javascript: gameItemClick(@item.Id, @Model.MatchData.Id)"><i class="fas fa-@item.Icon fa-5x play" style="color: #ffcc33; vertical-align: middle;"></i>&nbsp;@item.Name</a>
+            }
+        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Play Number
+                    </th>
+                    <th>
+                        Your Choice
+                    </th>
+                    <th>
+                        Computer Choice
+                    </th>
+                    <th>
+                        Result
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var game in Model.MatchData.Games)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => game.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => game.PlayerOneChoice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => game.PlayerTwoChoice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => game.Result)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

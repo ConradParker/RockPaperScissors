@@ -1,9 +1,8 @@
-﻿using RockPaperScissors.Data.Enums;
-using RockPaperScissors.Data.Repositories;
-using RockPaperScissors.Dto;
+﻿using RockPaperScissors.Data.Repositories;
+using RockPaperScissors.Dto.Enums;
+using RockPaperScissors.Dto.Query;
 using RockPaperScissors.Model;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace RockPaperScissors.Logic
@@ -31,23 +30,55 @@ namespace RockPaperScissors.Logic
         /// Find a Match by its key
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Match Data Transfer Object</returns>
-        public MatchDto GetMatch(int id)
+        /// <returns>Match  Object</returns>
+        public Match GetMatch(int id)
         {
             return _gameRepository.GetMatch(id);
         }
 
         /// <summary>
-        /// Creates a game object in the repository and returns the Dto
+        /// Get Index View Data
+        /// </summary>
+        /// <returns>IndexView Object</returns>
+        public IndexView GetIndexView()
+        {
+            var computerPlayers = Enum.GetValues(typeof(PlayerType))
+                .Cast<PlayerType>()
+                .Where(p => p != PlayerType.Human)
+                .ToList();
+
+            var view = new IndexView
+            {
+                PlayerTypes = computerPlayers
+            };
+            return view;
+        }
+
+        /// <summary>
+        /// Find a Game Play View Data by its key
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>PlayView Object</returns>
+        public MatchView GetMatchView(int id)
+        {
+            var matchView = new MatchView
+            {
+                MatchData = _gameRepository.GetMatchDto(id),
+                GameItems = _gameRepository.GetGameItemDtos()
+            };
+
+            return matchView;
+        }
+
+        /// <summary>
+        /// Creates a game object in the repository and returns the Id
         /// </summary>
         /// <param name="gameCount">The number of plays allowed in this game</param>
         /// <param name="playerOne">The type of player</param>
         /// <param name="playerTwo">The type of player</param>
-        /// <returns>Game Data Transfer Object</returns>
-        public MatchDto StartMatch(int gameCount, Player playerOne, Player playerTwo)
+        /// <returns>id of the new Match</returns>
+        public MatchView StartMatch(int gameCount, Player playerOne, Player playerTwo)
         {
-            // Add new players to repo
-            
             var match = new Match
             {
                 MatchDate = DateTime.Now,
@@ -56,37 +87,37 @@ namespace RockPaperScissors.Logic
                 PlayerTwo = playerTwo
             };
             _gameRepository.Create(match);
-            return _gameRepository.GetMatch(match.Id);
+            return GetMatchView(match.Id);
         }
 
         /// <summary>
         /// Make a play during the game
         /// </summary>
-        /// <param name="matchId">The Id of the match</param>
-        /// <param name="playerOneChoiceId">The GameItem id</param>
-        /// <param name="playerTwoChoiceId">The GameItem id</param>
+        /// <param name="match">The match</param>
+        /// <param name="playerOneChoice">The GameItem</param>
+        /// <param name="playerTwoChoice">The GameItem</param>
         /// <returns>The updated Game Dto</returns>
-        public MatchDto PlayGame(int matchId, int playerOneChoiceId, int playerTwoChoiceId)
+        public MatchView PlayGame(Match match, GameItem playerOneChoice, GameItem playerTwoChoice)
         {
-            // Get current game info 
-            var rules = _gameRepository.GetAll<Rule>().ToList();
-            var playerOneChoice = _gameRepository.GetById<GameItem>(playerOneChoiceId);
-            var playerTwoChoice = _gameRepository.GetById<GameItem>(playerTwoChoiceId);
-            var match = _gameRepository.GetMatch(matchId);
-
             // Check we have not exceeded the allowed number of plays per game
             if (match.Games.Count >= match.GameCount)
             {
                 throw new NotSupportedException("Game play count exceeded");
             }
 
-            // Calculate the game result
-            var result = _gameRepository.GetById<Result>((int)CalculateGameResult(rules, playerOneChoice, playerTwoChoice));
-            _gameRepository.AddGame(matchId, playerOneChoice, playerTwoChoice, result);
+            // Get game result
+            var result = CalculateGameResult(playerOneChoice, playerTwoChoice);
 
-            // Get the updated match info
-            return GetMatch(matchId);
+            // Add the game to the repo
+            _gameRepository.AddGame(match, playerOneChoice, playerTwoChoice, result);
 
+            // Check if we should complete the Match
+            if (match.Games.Count >= match.GameCount)
+            {
+                _gameRepository.CompleteMatch(match, CalculateMatchResult(match));
+            }
+
+            return GetMatchView(match.Id);
         }
         
         public Player CreatePlayer(Player player)
@@ -95,7 +126,7 @@ namespace RockPaperScissors.Logic
             return _gameRepository.Create(player);
         }
 
-        public GameItem GetComputerChoice(Computer computer)
+        public GameItem GetComputerChoice(Player computer)
         {
             GameItem computerChoice = null;
 
@@ -105,7 +136,8 @@ namespace RockPaperScissors.Logic
                     computerChoice = ChooseRandomItem();
                     break;
                 case nameof(TacticalComputer):
-                    return ChooseTacticalItem(computer);
+                    computerChoice = ChooseTacticalItem(computer);
+                    break;
                 default:
                     throw new NotSupportedException();
             }
@@ -113,10 +145,35 @@ namespace RockPaperScissors.Logic
             return computerChoice;
         }
 
+        /// <summary>
+        /// Work out the Game result based on the choices supplied
+        /// </summary>
+        /// <param name="playerOneChoice"></param>
+        /// <param name="playerTwoChoice"></param>
+        /// <returns>Result object</returns>
+        public Result CalculateGameResult(GameItem playerOneChoice, GameItem playerTwoChoice)
+        {
+            var gameResult = ResultType.Draw;
+
+            if (playerOneChoice != playerTwoChoice)
+            {
+                if (FirstBeatsSecond(playerOneChoice, playerTwoChoice))
+                {
+                    gameResult = ResultType.Player1Win;
+                }
+                else if (FirstBeatsSecond(playerTwoChoice, playerOneChoice))
+                {
+                    gameResult = ResultType.Player2Win;
+                }
+            }
+
+            return _gameRepository.GetById<Result>((int)gameResult);
+        }
+
         #endregion Public Methods
 
         #region Private Methods
-        
+
         /// <summary>
         /// Choose a random item from the list of supplied items
         /// </summary>
@@ -125,8 +182,8 @@ namespace RockPaperScissors.Logic
         {
             var random = new Random();
             var gameItems = _gameRepository.GetAll<GameItem>().ToList();
-            var randomItemKey = random.Next(gameItems.Count);
-            return gameItems[randomItemKey];
+            var itemIndex = random.Next(gameItems.Count);
+            return _gameRepository.GetById<GameItem>(itemIndex + 1);
         }
 
         /// <summary>
@@ -149,31 +206,49 @@ namespace RockPaperScissors.Logic
             return ChooseRandomItem();
         }
         
-        private static ResultType CalculateGameResult(IEnumerable<Rule> rules, GameItem playerOneChoice, GameItem playerTwoChoice)
+        /// <summary>
+        /// Check if the first supplied GameItem beats the second
+        /// </summary>
+        /// <param name="firstChoice"></param>
+        /// <param name="secondChoice"></param>
+        /// <returns>bool</returns>
+        private bool FirstBeatsSecond(GameItem firstChoice, GameItem secondChoice)
         {
-            var gameResult = ResultType.Draw;
+            var rules = _gameRepository.GetAll<Rule>().ToList();
 
-            // Check for a draw
-            if (playerOneChoice == playerTwoChoice)
+            var playerOneBeatsThese = rules.Where(r => r.GameItemId == firstChoice.Id).Select(r => r.BeatsId);
+            if (playerOneBeatsThese.Any(r => r == secondChoice.Id))
             {
-                return gameResult;
+                return true;
             }
 
-            // Check if player one beat player two
-            var playerOneBeatsThese = rules.Where(r => r.GameItemId == playerOneChoice.Id).Select(r => r.BeatsId);
-            if (playerOneBeatsThese.Any(r => r == playerTwoChoice.Id))
-            {
-                gameResult = ResultType.Player1Win;
-            }
-            var playerTwoBeatsThese = rules.Where(r => r.GameItemId == playerTwoChoice.Id).Select(r => r.BeatsId);
-            if (playerTwoBeatsThese.Any(r => r == playerOneChoice.Id))
-            {
-                gameResult = ResultType.Player2Win;
-            }
-
-            return gameResult;
+            return false;
         }
 
+        /// <summary>
+        /// Calculate the match result
+        /// </summary>
+        /// <param name="match"></param>
+        /// <returns></returns>
+        private Result CalculateMatchResult(Match match)
+        {
+            var resultType = ResultType.Draw;
+
+            var playerOneWinCount = match.Games.Count(game => game.Result.Id == (int)ResultType.Player1Win);
+            var playerTwoWinCount = match.Games.Count(game => game.Result.Id == (int)ResultType.Player2Win);
+
+            if (playerOneWinCount > playerTwoWinCount)
+            {
+                resultType = ResultType.Player1Win;
+            }
+            else if (playerTwoWinCount > playerOneWinCount)
+            {
+                resultType = ResultType.Player2Win;
+            }
+
+            return GetById<Result>((int)resultType);
+        }
+        
         #endregion Private Methods
     }
 }

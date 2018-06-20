@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using RockPaperScissors.Data.Enums;
+using RockPaperScissors.Dto.Enums;
 using RockPaperScissors.Logic;
 using RockPaperScissors.Model;
 using RockPaperScissors.Web.Models;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace RockPaperScissors.Web.Controllers
 {
@@ -33,58 +32,37 @@ namespace RockPaperScissors.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var viewModel = _gameLogic.GetIndexView();
+            return View(viewModel);
         }
 
-        public IActionResult Match(int? id)
+        public IActionResult StartMatch(int computerTypeId)
         {
-            // Validate parameter
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             // Create new players
             var humanPlayer = _gameLogic.CreatePlayer(new Human());
-            var computerPlayer = CreateComputerPlayer(id.Value);
+            var computerPlayer = CreateComputerPlayer(computerTypeId);
 
             // Create new game
             var gameCount = int.Parse(_configuration["AppSettings:GamePlays"]);
-            var match = _gameLogic.StartMatch(gameCount, humanPlayer, computerPlayer);
+            
+            // Fetch and return
+            var matchView = _gameLogic.StartMatch(gameCount, humanPlayer, computerPlayer);
+            return PartialView("_Match", matchView);
+         }
 
-            return View(match);
-        }
-        
-        public IActionResult Play(int matchId, int playerOneItemId)
+        public IActionResult PlayGame(int gameItemId, int matchId)
         {
-            // Figure out computer's choice
+            // Figure out player choices
             var match = _gameLogic.GetMatch(matchId);
-            var computer = _gameLogic.GetById<Computer>(match.PlayerTwoId);
-            var computerChoiceId = _gameLogic.GetComputerChoice(computer).Id;
+            var playerOneChoice = _gameLogic.GetById<GameItem>(gameItemId);
+            var computerChoice = _gameLogic.GetComputerChoice(match.PlayerTwo);
 
-            // Play game and return results
-            match = _gameLogic.PlayGame(matchId, playerOneItemId, computerChoiceId);
-            return PartialView("_MatchPlay", match);
-        }
+            // Play game
+            _gameLogic.PlayGame(match, playerOneChoice, computerChoice);
 
-        public IActionResult PlayerSelect()
-        {
-            var computerPlayers = Enum.GetValues(typeof(PlayerType))
-                .Cast<PlayerType>()
-                .Where(p => p != PlayerType.Human)
-                .ToList();
-            return View(computerPlayers);
-        }
-
-
-        public IActionResult Todo()
-        {
-            return View();
-        }
-
-        public IActionResult Worklog()
-        {
-            return View();
+            // Return results
+            var matchView = _gameLogic.GetMatchView(matchId);
+            return PartialView("_Match", matchView);
         }
 
         public IActionResult Error()

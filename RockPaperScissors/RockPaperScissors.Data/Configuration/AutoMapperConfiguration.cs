@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using RockPaperScissors.Dto;
+using RockPaperScissors.Dto.Query;
 using RockPaperScissors.Model;
 using System.Text;
 
@@ -28,6 +28,8 @@ namespace RockPaperScissors.Data
                 .ForMember(dto => dto.PlayerTwoChoice, opt => opt.MapFrom(g => g.PlayerTwoChoice.Name))
                 .ForMember(dto => dto.ResultId, opt => opt.MapFrom(g => g.Result.Id))
                 .ForMember(dto => dto.Result, opt => opt.MapFrom(g => g.Result.Text));
+
+                cfg.CreateMap<GameItem, GameItemDto>();
             });
         }
 

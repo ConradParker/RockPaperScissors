@@ -1,4 +1,4 @@
-﻿namespace RockPaperScissors.Data.Enums
+﻿namespace RockPaperScissors.Dto.Enums
 {
     public enum ResultType
     {

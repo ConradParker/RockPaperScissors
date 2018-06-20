@@ -23,6 +23,7 @@ namespace RockPaperScissors.Data
         {
             modelBuilder.ApplyConfiguration(new PlayerConfiguration());
             modelBuilder.ApplyConfiguration(new RulesConfiguration());
+            modelBuilder.ApplyConfiguration(new GameConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RockPaperScissors.Dto
+namespace RockPaperScissors.Dto.Query
 {
     public class MatchDto
     {
