@@ -1,8 +1,9 @@
 # Rock, Paper, Scissors
-A simple application to process a match of rock, paper, scissors based on ther following requirements.
+An ASP.NET application to process a match of rock, paper, scissors based on ther following requirements.
 
 [ Requirements ](Requirements.docx)
 
+### Versions
 [ Version history ](CHANGELOG.md)
 
 The solution is divided into several projects
@@ -15,7 +16,4 @@ the business model
 the data access layer
 
 ### RockPaperScissors.Web
-The UI bit
- 
-
- 
+The UI bit 
