@@ -22,25 +22,27 @@
     <script>
         function selectPlayer(selectedId) {
             $('#start-game').hide();
-            $('.loader').show();
+            $('#match-loader').show();
             $.ajax({
                 url: '@Url.Action("StartMatch", "Home")?computerTypeId=' + selectedId,
                 type: "GET",
                 dataType: "html",
                 success: function (data) {
                     $('#match-play').html(data);
-                    $('.loader').hide();
+                    $('#match-loader').hide();
                 },
             });
         };
 
         function gameItemClick(gameItemid, matchId) {
+            $('#game-loader').show();
             $.ajax({
                 url: '@Url.Action("PlayGame", "Home")?gameItemId=' + gameItemid + '&matchId=' + matchId,
                 type: "GET",
                 dataType: "html",
                 success: function (data) {
                     $('#match-play').html(data);
+                    $('#game-loader').hide();
                 },
             });
         }
@@ -48,6 +50,7 @@
         function resetClick() {
             $('#start-game').show();
             $('#match-play').html(null);
+            $('#btnPlay').click();
         };
 
     </script>
