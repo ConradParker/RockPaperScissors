@@ -1,5 +1,5 @@
 ﻿
-// toggle wheel of fate rotation
+// toggle shaking
 $("#btnPlay").click(function () {
     $(".play").addClass("shake");
     setTimeout(

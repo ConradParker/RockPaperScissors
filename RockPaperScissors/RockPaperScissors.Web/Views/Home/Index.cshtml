@@ -22,12 +22,14 @@
     <script>
         function selectPlayer(selectedId) {
             $('#start-game').hide();
+            $('.loader').show();
             $.ajax({
                 url: '@Url.Action("StartMatch", "Home")?computerTypeId=' + selectedId,
                 type: "GET",
                 dataType: "html",
                 success: function (data) {
                     $('#match-play').html(data);
+                    $('.loader').hide();
                 },
             });
         };
