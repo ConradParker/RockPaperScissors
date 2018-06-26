@@ -824,19 +824,6 @@ img::-moz-selection {
     background: 0 0;
 }
 
-/* Rotate */
-.rotate {
-    -moz-transition: all 1s linear;
-    -webkit-transition: all 1s linear;
-    transition: all 1s linear;
-}
-
-    .rotate.down {
-        -moz-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-
 dd {
     margin-left: 10px;
 }
@@ -891,22 +878,3 @@ dd {
         transform: translate(1px, -2px) rotate(-1deg);
     }
 }
-
-.highlight > img{
-    border: 2px solid grey;
-    box-shadow: 0 0 10px #333;
-    -webkit-box-shadow: 0 0 10px #333;
-    -moz-box-shadow: 0 0 10px #333;
-    -o-box-shadow: 0 0 10px #333;
-    -ms-box-shadow: 0 0 10px #333;
-    margin: 0 5px 0 20px;
-}
-
-    .highlight > img:hover {
-        border: 2px solid red;
-        box-shadow: 0 0 10px #333;
-        -webkit-box-shadow: 0 0 10px #333;
-        -moz-box-shadow: 0 0 10px #333;
-        -o-box-shadow: 0 0 10px #333;
-        -ms-box-shadow: 0 0 10px #333;
-    }

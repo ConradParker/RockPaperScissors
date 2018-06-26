@@ -87,14 +87,15 @@ namespace RockPaperScissors.Data.Repositories
         public GameItem GetPlayersLastChoice(Player player)
         {
             var lastGameId = _dbContext.Set<Match>()
-                .Include(p=>p.PlayerOne)
-                .Include(p => p.PlayerTwo)
+                .Include(m => m.PlayerOne)
+                .Include(m => m.PlayerTwo)
+                .Include(m => m.Games)
                 .LastOrDefault(m => m.PlayerOne.Id == player.Id ||
                     m.PlayerTwo.Id == player.Id &&
                     m.Games.Any())
                 ?.Games
                 .LastOrDefault().Id;
-
+            
             GameItem gameItem = null;
             if (lastGameId != null)
             {

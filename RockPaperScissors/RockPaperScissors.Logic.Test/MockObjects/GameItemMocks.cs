@@ -26,7 +26,7 @@ namespace RockPaperScissors.Logic.Test.MockObjects
         {
             get
             {
-                return new GameItem { Id = 1, Name = "Scissors" };
+                return new GameItem { Id = 3, Name = "Scissors" };
             }
         }
     }

@@ -66,34 +66,33 @@ namespace RockPaperScissors.Data.Test
         }
 
         // TODO
-        //[TestMethod]
-        //public void GetPlayersLastChoice_ReturnsExpectedItem()
-        //{
-        //    // Arrange - Set up InMemory DB and add some mock data
-        //    var options = new DbContextOptionsBuilder<RockPaperScissorsContext>()
-        //        .UseInMemoryDatabase(databaseName: "LastChoiceDb")
-        //        .Options;
-        //    using (var context = new RockPaperScissorsContext(options))
-        //    {
-        //        _gameRepository = new GameRepository(context);
-        //        context.Add(MatchMocks.MatchWithTwoGames.PlayerOne);
-        //        context.Add(MatchMocks.MatchWithTwoGames.PlayerTwo);
-        //        _gameRepository.Create(MatchMocks.MatchWithTwoGames);
-        //    }
+        [TestMethod]
+        public void GetPlayersLastChoice_ReturnsExpectedItem()
+        {
+            // Arrange - Set up InMemory DB and add some mock data
+            var options = new DbContextOptionsBuilder<RockPaperScissorsContext>()
+                .UseInMemoryDatabase(databaseName: "LastChoiceDb")
+                .Options;
+            using (var context = new RockPaperScissorsContext(options))
+            {
+                _gameRepository = new GameRepository(context);
+                context.Add(MatchMocks.MatchWithThreeGames);
+                context.SaveChanges();
+            }
 
-        //    // Act - Use a separate instance of the context to verify correct data was saved to database
-        //    using (var context = new RockPaperScissorsContext(options))
-        //    {
-        //        // Arrange
-        //        var gameRepository = new GameRepository(context);
-        //        var player = context.TacticalComputers.Single();
+            // Act - Use a separate instance of the context to verify correct data was saved to database
+            using (var context = new RockPaperScissorsContext(options))
+            {
+                // Arrange
+                var gameRepository = new GameRepository(context);
+                var player = context.TacticalComputers.Single();
 
-        //        // Act
-        //        var gameItem = gameRepository.GetPlayersLastChoice(player);
+                // Act
+                var gameItem = gameRepository.GetPlayersLastChoice(player);
 
-        //        // Assert
-        //        Assert.AreEqual(1, gameItem.Id);
-        //    }
-        //}
+                // Assert
+                Assert.AreEqual(3, gameItem.Id);
+            }
+        }
     }
 }

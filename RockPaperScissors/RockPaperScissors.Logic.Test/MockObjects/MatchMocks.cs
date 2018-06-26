@@ -17,8 +17,8 @@ namespace RockPaperScissors.Logic.Test.MockObjects
                     Id = 1,
                     MatchDate = new DateTime(2018, 1, 1),
                     GameCount = 3,
-                    PlayerOne = new Human { Id = 1 },
-                    PlayerTwo = new TacticalComputer { Id = 2 },
+                    PlayerOne = PlayerMocks.HumanPlayer,
+                    PlayerTwo = PlayerMocks.Computer,
                     Games = GameMocks.TwoGameList.ToList()
                 };
 
@@ -35,8 +35,8 @@ namespace RockPaperScissors.Logic.Test.MockObjects
                     Id = 1,
                     MatchDate = new DateTime(2018, 1, 1),
                     GameCount = 3,
-                    PlayerOne = new Human { Id = 1 },
-                    PlayerTwo = new TacticalComputer { Id = 2 },
+                    PlayerOne = PlayerMocks.HumanPlayer,
+                    PlayerTwo = PlayerMocks.TacticalPlayer,
                     Games = GameMocks.ThreeGameList.ToList()
                 };
 

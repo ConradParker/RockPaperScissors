@@ -87,5 +87,22 @@ namespace RockPaperScissors.Logic.Test
             // Assert
             Assert.AreEqual(result.Text, "Draw");
         }
+
+        [TestMethod]
+        public void GetComputerChoice_GetsTacticalChoice()
+        {
+            // Arrange
+            var playerTwo = PlayerMocks.TacticalPlayer;
+            _mockRepo.Setup(x => x.GetPlayersLastChoice(playerTwo)).Returns(GameItemMocks.ScissorsGameItem);
+            _mockRepo.Setup(x => x.GetAll<Rule>()).Returns(RuleMocks.Rules);
+            _mockRepo.Setup(x => x.GetById<GameItem>(1)).Returns(GameItemMocks.RockGameItem);
+
+            // Act
+            var result = _gameLogic.GetComputerChoice(playerTwo);
+
+            // Assert
+            Assert.AreEqual(result.Id, GameItemMocks.RockGameItem.Id);
+            Assert.AreEqual(result.Name, GameItemMocks.RockGameItem.Name);
+        }
     }
 }
