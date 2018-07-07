@@ -10,7 +10,7 @@
             @foreach (var player in Model.PlayerTypes)
             {
                 <div class="col-sm-6">
-                    <button class="btn btn-primary" onclick="selectPlayer(@i)"><img src="https://robohash.org/@player@@.png" />&nbsp;@player Computer</button>
+                    <button class="btn btn-primary btn-robot" onclick="selectPlayer(@i)"><img src="https://robohash.org/@player@@.png?size=100x100" />&nbsp;@player Computer</button>
                 </div>
                 i++;
             }
