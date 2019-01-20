@@ -6,6 +6,7 @@ using RockPaperScissors.Model;
 using RockPaperScissors.Web.Models;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace RockPaperScissors.Web.Controllers
 {
@@ -32,7 +33,7 @@ namespace RockPaperScissors.Web.Controllers
 
         public IActionResult Index()
         {
-            var viewModel = _gameLogic.GetIndexView();
+            var viewModel = _gameLogic.GetPlayerTypes().ToList();
             return View(viewModel);
         }
 
@@ -46,8 +47,8 @@ namespace RockPaperScissors.Web.Controllers
             var gameCount = int.Parse(_configuration["AppSettings:GamePlays"]);
             
             // Fetch and return
-            var matchView = _gameLogic.StartMatch(gameCount, humanPlayer, computerPlayer);
-            return PartialView("_Match", matchView);
+            var match = _gameLogic.StartMatch(gameCount, humanPlayer, computerPlayer);
+            return PartialView("_Match", match);
          }
 
         public IActionResult PlayGame(int gameItemId, int matchId)
@@ -61,8 +62,8 @@ namespace RockPaperScissors.Web.Controllers
             _gameLogic.PlayGame(match, playerOneChoice, computerChoice);
 
             // Return results
-            var matchView = _gameLogic.GetMatchView(matchId);
-            return PartialView("_Match", matchView);
+            var matchInfo = _gameLogic.GetMatchInfo(matchId);
+            return PartialView("_Match", matchInfo);
         }
 
         public IActionResult Error()

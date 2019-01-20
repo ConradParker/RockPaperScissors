@@ -2,7 +2,7 @@
 
 namespace RockPaperScissors.Dto.Query
 {
-    public class MatchView
+    public class MatchInfo
     {
         public MatchDto MatchData { get; set; }
         public IEnumerable<GameItemDto> GameItems { get; set; }

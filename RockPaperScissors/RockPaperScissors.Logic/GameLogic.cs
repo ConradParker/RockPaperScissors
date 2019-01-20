@@ -3,6 +3,7 @@ using RockPaperScissors.Dto.Enums;
 using RockPaperScissors.Dto.Query;
 using RockPaperScissors.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RockPaperScissors.Logic
@@ -37,21 +38,14 @@ namespace RockPaperScissors.Logic
         }
 
         /// <summary>
-        /// Get Index View Data
+        /// Get Player Types
         /// </summary>
-        /// <returns>IndexView Object</returns>
-        public IndexView GetIndexView()
+        /// <returns>List player types</returns>
+        public IEnumerable<PlayerType> GetPlayerTypes()
         {
-            var computerPlayers = Enum.GetValues(typeof(PlayerType))
+            return Enum.GetValues(typeof(PlayerType))
                 .Cast<PlayerType>()
-                .Where(p => p != PlayerType.Human)
-                .ToList();
-
-            var view = new IndexView
-            {
-                PlayerTypes = computerPlayers
-            };
-            return view;
+                .Where(p => p != PlayerType.Human);
         }
 
         /// <summary>
@@ -59,15 +53,15 @@ namespace RockPaperScissors.Logic
         /// </summary>
         /// <param name="id"></param>
         /// <returns>PlayView Object</returns>
-        public MatchView GetMatchView(int id)
+        public MatchInfo GetMatchInfo(int id)
         {
-            var matchView = new MatchView
+            var matchInfo = new MatchInfo
             {
                 MatchData = _gameRepository.GetMatchDto(id),
                 GameItems = _gameRepository.GetGameItemDtos()
             };
 
-            return matchView;
+            return matchInfo;
         }
 
         /// <summary>
@@ -77,7 +71,7 @@ namespace RockPaperScissors.Logic
         /// <param name="playerOne">The type of player</param>
         /// <param name="playerTwo">The type of player</param>
         /// <returns>id of the new Match</returns>
-        public MatchView StartMatch(int gameCount, Player playerOne, Player playerTwo)
+        public MatchInfo StartMatch(int gameCount, Player playerOne, Player playerTwo)
         {
             var match = new Match
             {
@@ -87,7 +81,7 @@ namespace RockPaperScissors.Logic
                 PlayerTwo = playerTwo
             };
             _gameRepository.Create(match);
-            return GetMatchView(match.Id);
+            return GetMatchInfo(match.Id);
         }
 
         /// <summary>
@@ -97,7 +91,7 @@ namespace RockPaperScissors.Logic
         /// <param name="playerOneChoice">The GameItem</param>
         /// <param name="playerTwoChoice">The GameItem</param>
         /// <returns>The updated Game Dto</returns>
-        public MatchView PlayGame(Match match, GameItem playerOneChoice, GameItem playerTwoChoice)
+        public MatchInfo PlayGame(Match match, GameItem playerOneChoice, GameItem playerTwoChoice)
         {
             // Check we have not exceeded the allowed number of plays per game
             if (match.Games.Count >= match.GameCount)
@@ -117,7 +111,7 @@ namespace RockPaperScissors.Logic
                 _gameRepository.CompleteMatch(match, CalculateMatchResult(match));
             }
 
-            return GetMatchView(match.Id);
+            return GetMatchInfo(match.Id);
         }
         
         /// <summary>
