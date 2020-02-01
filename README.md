@@ -1,7 +1,7 @@
 # Rock, Paper, Scissors
 An ASP.NET application to process a match of rock, paper, scissors based on ther following requirements. 
 
-[ Requirements ](Requirements.docx)
+[ Requirements ](Requirements.md)
 
 This is not complete or by any means perfect and there is much I'd like to improve. I hope it does show the basics of a good structural setup and some C# skills in here somewhere.
 
@@ -9,7 +9,7 @@ This is not complete or by any means perfect and there is much I'd like to impro
 [http://rockpaperscissors.sunseasolutions.com](http://rockpaperscissors.sunseasolutions.com)
 
 ### Version History
-[ CHANGELOG.md ](CHANGELOG.md)
+[ CHANGELOG ](CHANGELOG.md)
 
 The solution is divided into several projects
 ---------------------------------------------
